@@ -15,7 +15,7 @@ import { Field, Formik } from "formik";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/utils/supabase/client";
-import { useUser } from "@clerk/nextjs";
+
 import React, { useState, useEffect } from "react";
 import FileUpload from "../_components/FileUpload";
 import { FileWarning, Loader } from "lucide-react";
@@ -34,7 +34,7 @@ import {
 
 const EditListing = () => {
   const params = useParams();
-  const { user } = useUser();
+
   const router = useRouter();
   const formikRef = useRef();
   const [listing, setListing] = useState([]);

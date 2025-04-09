@@ -27,13 +27,19 @@ const MarkerItem = ({ item, closeHandler }) => {
         >
           Details
         </Button>
-        <Image
+        {item ?
+          <Image
           src={item?.listingImages[0].url}
           width={800}
           height={150}
           className="-z-9 rounded-lg object-cover w-[250px] h-[250px]  transition"
           alt="Image"
         />
+        :
+        <div>
+          
+        </div>
+        }
 
         <div className="w-full gap-y-1 pl-3 flex flex-col justify-center items-center border-t border-slate-200 mt-2">
           <div className="flex w-full ">

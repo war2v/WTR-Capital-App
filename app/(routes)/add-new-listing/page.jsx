@@ -3,7 +3,6 @@
 import GoogleAddressSearch from "@/app/_components/GoogleAddressSearch";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/utils/supabase/client";
-import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
@@ -13,7 +12,7 @@ const AddNewListing = () => {
   const [selectedAddress, setSelectedAddress] = useState();
   const [coordinates, setCoordinates] = useState();
   const [loader, setLoader] = useState(false);
-  const { user } = useUser();
+
   const { toast } = useToast();
   const router = useRouter();
 

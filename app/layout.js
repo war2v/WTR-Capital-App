@@ -1,5 +1,4 @@
 import { Atkinson_Hyperlegible } from "next/font/google";
-import { ClerkProvider  } from "@clerk/nextjs";
 import "./globals.css";
 import Provider from "./Provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -19,7 +18,6 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className} antialiased 
               h-screen
@@ -31,6 +29,5 @@ export default function RootLayout({ children }) {
           
         </body>
       </html>
-    </ClerkProvider>
   );
 }

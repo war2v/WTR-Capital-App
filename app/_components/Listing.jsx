@@ -33,7 +33,7 @@ const Listing = ({
   const [address, setAddress] = useState();
   return (
     <div>
-      <div className="w-[800px] z-2 bg-slate-100 pt-14">
+      <div className="w-[800px] z-2 bg-slate-100">
         <div className="flex pb-2 md:ml-0 ml-2">
           <GoogleAddressSearch
             setCoordinates={setCoordinates}

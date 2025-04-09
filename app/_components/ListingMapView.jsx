@@ -3,6 +3,7 @@ import { supabase } from "@/utils/supabase/client";
 import Listing from "./Listing";
 import { useEffect, useState } from "react";
 import GoogleMapSection from "./GoogleMapSection";
+import { toast } from "@/hooks/use-toast";
 
 const ListingMapView = () => {
   const [listing, setListing] = useState([]);
@@ -67,11 +68,13 @@ const ListingMapView = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 lg:w-[700px] md:w-[0px]">
-      <div className="fixed left-10 bottom-10 lg:w-[700px] md:w-[0px] mx-4  rounded-xl p-2 xl:bg-slate-300 border xl:border-slate-400 ">
+    <div className="grid grid-cols-1 xl:grid-cols-2 lg:w-screen md:w-[400px] mt-32">
+      <div>
+      <div className=" mx-4  rounded-xl p-2 xl:bg-slate-300 border xl:border-slate-400 ">
         <GoogleMapSection coordinates={coordinates} listing={listing} />
       </div>
-      <div className="absolute right-10 top-16">
+      </div>
+      <div >
         <div>
           <Listing
             listing={listing}

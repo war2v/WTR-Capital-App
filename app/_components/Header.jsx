@@ -1,23 +1,119 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  SignIn,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+
 import { ArrowRight, Home, Plus } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { supabase } from "@/utils/supabase/client";
+
+import Modal from "./Modal";
+import SignInModal from "./SignInModal";
+import SignUpModal from "./SignUpModal";
+import handleOwnerSignUp from "../_actions/signUpOwner";
 
 const Header = () => {
-  const path = usePathname();
-  const { user, isSignedIn } = useUser();
-  useEffect(() => {}, []);
+  const [isTenantSignInModalOpen, setIsTenantSignInModalOpen] = useState(false);
+  const [isTenantSignUpModalOpen, setIsTenantSignUpModalOpen] = useState(false);
+  const [isOwnerSignInModalOpen, setIsOwnerSignInModalOpen] = useState(false);
+  const [isOwnerSignUpModalOpen, setIsOwnerSignUpModalOpen] = useState(false);
+  const [signUpFormData, setSignUpFormData] = useState({
+    username: "",
+    email: "",
+    cell: "",
+    password: "",
+    password2: "",
+  });
+
+  const [signInFormData, setSignInFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const openTenantSignUpModal = () => {
+    if (isTenantSignInModalOpen) {
+      setIsTenantSignInModalOpen(false);
+    }
+    setIsTenantSignUpModalOpen(true);
+  };
+
+  const openTenantSignInModal = () => {
+    if (isTenantSignUpModalOpen) {
+      setIsTenantSignUpModalOpen(false);
+    }
+    setIsTenantSignInModalOpen(true);
+  };
+
+  const openOwnerSignUpModal = () => {
+    if (isOwnerSignInModalOpen) {
+      setIsOwnerSignInModalOpen(false);
+    }
+    setIsOwnerSignUpModalOpen(true);
+  };
+
+  const openOwnerSignInModal = () => {
+    if (isOwnerSignUpModalOpen) {
+      setIsOwnerSignUpModalOpen(false);
+    }
+    setIsOwnerSignInModalOpen(true);
+  };
+
+  const handleTenantSignIn = async (e) => {
+    e.preventDefault();
+    console.log("inside Owner Sign In");
+    console.log(signInFormData);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: signInFormData.email,
+      password: signInFormData.password,
+    });
+    if (error || !data?.user) {
+      console.log(error + " or no user");
+      return;
+    }
+    console.log(data.session);
+  };
+
+  const handleOwnerSignIn = async (e) => {
+    e.preventDefault();
+    console.log("inside Owner Sign In");
+    console.log(signInFormData);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: signInFormData.email,
+      password: signInFormData.password,
+    });
+    if (error || !data?.user) {
+      console.log(error + " or no user");
+      return;
+    }
+    console.log(data.session);
+  };
+
+  const handleTenantSignUp = async (e) => {
+    e.preventDefault();
+    console.log("inside Tenant Sign Up");
+    console.log(signUpFormData.password);
+    const { data, error } = supabase.auth.signUp({
+      email: signUpFormData.email,
+      password: signUpFormData.password,
+      options: {
+        data: {
+          first_name: "",
+          last_name: "",
+          account_type: "T",
+        },
+      },
+    });
+
+    if (error) {
+      console.log(error);
+    }
+    if (data) {
+      console.log(data);
+    }
+  };
 
   return (
     <div
@@ -56,18 +152,6 @@ const Header = () => {
                     "
           href="/"
         >
-          <Image
-            src={""}
-            width={35}
-            height={35}
-            alt="logo"
-            className="
-                                m-2
-                                hover:scale-110
-                                hover:cursor-pointer
-                                transition
-                            "
-          />
           <h1
             className={`
                                 font-medium
@@ -187,85 +271,7 @@ const Header = () => {
                 
             "
       ></div>
-      <div>
-        {!user ? (
-          <SignInButton
-            className="
-                    bg-slate-100
-                    w-40
-                    h-10
-                    text-blue-400
-                    border
-                    border-primary
-                    rounded-xl
-                    hover:cursor-pointer
-                    hover:scale-105
-                    hover:bg-blue-400
-                    hover:text-slate-100
-                    hover:border-none
-                    transition
-                    font-normal
-                    text-sm
-                    m-2
-                    "
-          />
-        ) : (
-          <div className="flex gap-x-3">
-            <Link href="/add-new-listing">
-              <Button
-                className="
-                    bg-slate-100
-                        w-40
-                        h-10
-                        text-blue-400
-                        border
-                        border-primary
-                        rounded-xl
-                        hover:cursor-pointer
-                        hover:scale-105
-                        hover:bg-blue-400
-                        hover:text-slate-100
-                        hover:border-none
-                        transition
-                        font-normal
-                        text-sm
-                        m-2"
-                disabled={!user}
-                onClick={(url = "/") => onClick(url)}
-              >
-                <Plus />
-                Add Listing
-              </Button>
-            </Link>
-
-            <Link href="/dashboard">
-              <Button
-                className="
-              
-              bg-blue-400
-                
-                text-slate-100
-                rounded-xl
-                hover:cursor-pointer
-                hover:scale-105
-                hover:bg-blue-100
-                hover:text-blue-500
-                hover:border
-                hover:border-blue-300
-                transition
-                font-normal
-                text-sm
-                m-2"
-                disabled={!user}
-                onClick={(url = "/dashboard") => onClick(url)}
-              >
-                <Plus />
-                Dashboard
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
+      <div></div>
       <div
         className="
                 flex
@@ -274,70 +280,85 @@ const Header = () => {
                 w-max
             "
       >
-        <Link href="/">
-          {isSignedIn ? (
-            <div
-              className="  
-                        flex
-                    "
-            >
-              <UserButton />
-              <SignOutButton
-                className="
-                            bg-slate-100
-                            w-40
-                            h-10
-                            text-blue-400
-                            border
-                            border-slate-300
-                            rounded-xl
-                            hover:cursor-pointer
-                            hover:scale-105
-                            hover:bg-blue-400
-                            hover:text-slate-100
-                            hover:border-none
-                            transition
-                            font-normal
-                            text-sm
-                            m-2
-                            "
-              />
-            </div>
-          ) : (
-            <h2
-              className=" 
-                            hover:scale-105
-                            px-3
-                            hover:text-blue-400
-                            transition
-                            hover:cursor-pointer
-                            sm:flex
-                        "
-            >
-              <SignInButton
-                className="
-                                bg-slate-100
-                                w-48
-                                h-10
-                                text-blue-400
-                                border
-                                border-slate-300
-                                rounded-xl
-                                hover:cursor-pointer
-                                hover:scale-105
-                                hover:bg-blue-400
-                                hover:text-slate-100
-                                hover:border-none
-                                transition
-                                font-normal
-                                text-sm
-                                "
-              >
-                Owner/Tenant Login
-              </SignInButton>
-            </h2>
-          )}
-        </Link>
+        {/*
+          User Authentication Modals
+        */}
+
+        <div className="flex gap-x-2">
+          <Button
+            className="
+        bg-slate-100
+          text-blue-400
+          border
+          border-slate-300
+          rounded-xl
+          hover:cursor-pointer
+          hover:scale-105
+          hover:bg-blue-400
+          hover:text-slate-100
+          hover:border-none
+          transition"
+            onClick={openTenantSignInModal}
+          >
+            tenants
+          </Button>
+          <Button
+            className="
+          bg-slate-100
+            text-blue-400
+            border
+            border-slate-300
+            rounded-xl
+            hover:cursor-pointer
+            hover:scale-105
+            hover:bg-blue-400
+            hover:text-slate-100
+            hover:border-none
+            transition"
+            onClick={openOwnerSignInModal}
+          >
+            owners
+          </Button>
+
+          <SignInModal
+            isOpen={isTenantSignInModalOpen}
+            title="Tenant"
+            onSubmit={handleTenantSignIn}
+            openSignUp={openTenantSignUpModal}
+            setIsOpen={setIsTenantSignInModalOpen}
+            signInFormData={signInFormData}
+            setSignInFormData={setSignInFormData}
+          />
+          <SignUpModal
+            isOpen={isTenantSignUpModalOpen}
+            title="Tenant"
+            onSubmit={handleTenantSignUp}
+            openSignIn={openTenantSignInModal}
+            setIsOpen={setIsTenantSignUpModalOpen}
+            signUpFormData={signUpFormData}
+            setSignUpFormData={setSignUpFormData}
+          />
+
+          <SignInModal
+            isOpen={isOwnerSignInModalOpen}
+            title="Owner"
+            onSubmit={handleOwnerSignIn}
+            openSignUp={openOwnerSignUpModal}
+            setIsOpen={setIsOwnerSignInModalOpen}
+            signInFormData={signInFormData}
+            setSignInFormData={setSignInFormData}
+          />
+
+          <SignUpModal
+            isOpen={isOwnerSignUpModalOpen}
+            title="Owner"
+            onSubmit={handleOwnerSignUp}
+            openSignIn={openOwnerSignInModal}
+            setIsOpen={setIsOwnerSignUpModalOpen}
+            signUpFormData={signUpFormData}
+            setSignUpFormData={setSignUpFormData}
+          />
+        </div>
       </div>
     </div>
   );
